@@ -4,8 +4,8 @@
 This plugin adds support for authenticating users via AWS Cognito on the front-end of an October CMS application. The RainLab\User model is used as the authenticated user object in the system.
 
 ## What to expect
-* Upon creation of a RainLab user with the option "Allow Front-end Login" checked, the user will be added to the associated AWS Cognito account with the provided email address and password.
 * Three new components will be available: 1) Login, 2) RequestPasswordReset, and 3) ResetPassword.
+* Logging in with a user that exists in AWS Cognito will create the RainLab User in the local system.
 
 ## Components
 1. Login: Provides a login form.
@@ -96,7 +96,6 @@ ACTIVE_THEME=bootstrap
 ```
 9. Add the "Login", "RequestPasswordReset", and "ResetPassword" components to the front-end pages that you wish to add the forms to.
 10. Update the `routing configuration` section in `/config/cognito.php` to include the URLs of the pages which the components were added.
-11. Test the registration functionality by creating a user via the RainLab User plugin with the option "Allow Front-end Login" checked and ensure they're also created in the AWS Cognito account.
 12. Test the login functionality by using the login form added to a page in step 9. Also test the reset password process.
 
 ## Tips

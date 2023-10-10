@@ -73,10 +73,22 @@ class Login extends ComponentBase
 
         try {
             if (app()->make(CognitoClient::class)->authenticate($request->email, $request->password, [])) {
-                // check if the user exists in rainlab users
-                if (!$rainlabUser = User::where('email', $data['email'])->where('is_cognito_user', 1)->where('is_cognito_user_existing', 1)->first()) {
-                    Flash::error('No user with provided email address found.'); // no user found by email with front-end access
-                    return false;
+                // check if the user exists in rainlab users, create one if nto
+                if (!$rainlabUser = User::where('email', $data['email'])->first()) {
+                    // generate random password
+                    $randomBytes = random_bytes(16);
+                    $timestamp = microtime(true);
+                    $dataToHash = $randomBytes . $timestamp;
+                    $uniqueHash = hash('sha256', $dataToHash);
+                    $randomString = substr($uniqueHash, 0, 16 * 2);
+                    // create the rainlab user
+                    $rainlabUser = new User;
+                    $rainlabUser->email = $data['email'];
+                    $rainlabUser->username = $data['email'];
+                    $rainlabUser->password = $randomString;
+                    $rainlabUser->password_confirmation = $randomString;
+                    $rainlabUser->is_cognito_user = 1;
+                    $rainlabUser->save();
                 }
                 Auth::login($rainlabUser);
                 return Redirect::to(Config::get('cognito.login_success_url'));
