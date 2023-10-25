@@ -13,7 +13,7 @@ return [
     'user_pool_id'      => env('AWS_COGNITO_USER_POOL_ID', ''),
 
     // package configuration
-    'use_sso'           => env('USE_SSO', false),
+    'use_sso'           => env('AWS_COGNITO_USE_SSO', false),
     'sso_user_fields'   => [
         'name',
         'email',
