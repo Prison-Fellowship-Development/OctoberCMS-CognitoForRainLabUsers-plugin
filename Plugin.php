@@ -17,6 +17,10 @@ use AlbrightLabs\RainlabUserCognito\Providers\CognitoAuthServiceProvider;
  */
 class Plugin extends PluginBase
 {
+    public $require = [
+        'RainLab.User',
+    ];
+
     /**
      * pluginDetails about this plugin.
      */
