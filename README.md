@@ -82,7 +82,7 @@ AWS_COGNITO_CLIENT_SECRET=
 AWS_COGNITO_USER_POOL_ID=
 AWS_COGNITO_REGION=
 AWS_COGNITO_VERSION=
-USE_SSO=
+AWS_COGNITO_USE_SSO=
 AWS_COGNITO_DELETE_USER=
 ```
 7. Ensure that the `.env` file includes a setting for the backend URL and has the `Cms` module enabled.
