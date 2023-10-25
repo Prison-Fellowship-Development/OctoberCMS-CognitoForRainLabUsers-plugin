@@ -88,6 +88,7 @@ class Login extends ComponentBase
                     $rainlabUser->password = $randomString;
                     $rainlabUser->password_confirmation = $randomString;
                     $rainlabUser->is_cognito_user = 1;
+                    $rainlabUser->is_activated = true;
                     $rainlabUser->save();
                 }
                 Auth::login($rainlabUser);
