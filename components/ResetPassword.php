@@ -69,7 +69,8 @@ class ResetPassword extends ComponentBase
                 'password_confirmation' => $data['password'],
             ]);
 
-            if (User::where('email', $data['email'])->where('is_cognito_user', 1)->where('is_cognito_user_existing', 1)->first()) {
+            $user = User::where('email', $data['email'])->where('is_cognito_user', 1)->first();
+            if ($user) {
                 $response = app()->make(CognitoClient::class)->resetPassword($request->confirmation_code, $request->email, $request->password);
 
                 if($response == Password::PASSWORD_RESET){
