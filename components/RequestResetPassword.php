@@ -63,9 +63,11 @@ class RequestResetPassword extends ComponentBase
         ]);
 
         try {
-            $user = User::where('email', $data['email'])->where('is_cognito_user', 1)->first();
+            $user = User::where('email', $data['email'])->where('is_cognito_user', true)->first();
+
             if (! $user) {
-                Flash::error('A user with this email does not exist.'); // user does not exist error
+                Flash::error('A user with this email does not exist.');
+
                 return false;
             }
             // attempt sending of reset email
