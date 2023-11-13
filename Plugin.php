@@ -1,13 +1,8 @@
 <?php namespace Albrightlabs\RainlabUserCognito;
 
 use App;
-use Event;
-use Flash;
 use RainLab\User\Models\User;
-use ValidationException;
-use Illuminate\Http\Request;
 use System\Classes\PluginBase;
-use BlackBits\LaravelCognitoAuth\CognitoClient;
 use AlbrightLabs\RainlabUserCognito\Providers\CognitoAuthServiceProvider;
 
 /**
@@ -50,6 +45,9 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
+        User::extend(function (User $model) {
+            $model->addFillable(['is_cognito_user', 'is_activated']);
+        });
     }
 
     /**
