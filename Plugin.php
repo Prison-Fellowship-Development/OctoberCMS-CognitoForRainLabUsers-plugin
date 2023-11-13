@@ -46,7 +46,7 @@ class Plugin extends PluginBase
     public function boot()
     {
         User::extend(function (User $model) {
-            $model->addFillable(['is_cognito_user', 'is_activated', 'password', 'password_confirmation']);
+            $model->addFillable(['is_cognito_user', 'is_activated']);
         });
     }
 
