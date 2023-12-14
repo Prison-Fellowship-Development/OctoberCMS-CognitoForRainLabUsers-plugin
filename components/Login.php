@@ -59,9 +59,11 @@ class Login extends ComponentBase
             throw new ValidationException($validation);
         }
 
+        $email = \Str::lower(trim($data['email']));
+
         $request = new Request();
         $request->replace([
-            'email'    => $data['email'],
+            'email'    => $email,
             'password' => $data['password'],
         ]);
 
@@ -74,7 +76,7 @@ class Login extends ComponentBase
         try {
             if (app()->make(CognitoClient::class)->authenticate($request->email, $request->password, [])) {
                 // check if the user exists in rainlab users, create one if nto
-                if (!$rainlabUser = User::where('email', $data['email'])->first()) {
+                if (!$rainlabUser = User::where('email', $email)->first()) {
                     // generate random password
                     $randomBytes = random_bytes(16);
                     $timestamp = microtime(true);
@@ -83,8 +85,8 @@ class Login extends ComponentBase
                     $randomString = substr($uniqueHash, 0, 16 * 2);
                     // create the rainlab user
                     $rainlabUser = new User;
-                    $rainlabUser->email = $data['email'];
-                    $rainlabUser->username = $data['email'];
+                    $rainlabUser->email = $email;
+                    $rainlabUser->username = $email;
                     $rainlabUser->password = $randomString;
                     $rainlabUser->password_confirmation = $randomString;
                     $rainlabUser->is_cognito_user = 1;
