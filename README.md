@@ -3,6 +3,21 @@
 ## Purpose
 This plugin adds support for authenticating users via AWS Cognito on the front-end of an October CMS application. The RainLab\User model is used as the authenticated user object in the system.
 
+## Requirements
+
+| Dependency | Version |
+|------------|---------|
+| October CMS | 3.0+ |
+| RainLab.User | 2.1+ or 3.0+ |
+| PHP | 8.0+ |
+
+### Version Compatibility
+
+| October CMS | RainLab.User | Status |
+|-------------|--------------|--------|
+| 3.0 - 3.5 | ^2.1 | Supported |
+| 3.6+ | ^3.0 | Supported |
+
 ## What to expect
 * Three new components will be available: 1) Login, 2) RequestPasswordReset, and 3) ResetPassword.
 * Logging in with a user that exists in AWS Cognito will create the RainLab User in the local system.
