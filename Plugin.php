@@ -4,7 +4,10 @@ use App;
 use Schema;
 use RainLab\User\Models\User;
 use System\Classes\PluginBase;
-use AlbrightLabs\RainlabUserCognito\Providers\CognitoAuthServiceProvider;
+use Albrightlabs\RainlabUserCognito\Classes\CognitoClient;
+use Albrightlabs\RainlabUserCognito\Classes\CognitoGuard;
+use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
+use Illuminate\Foundation\Application;
 
 /**
  * Plugin Information File
@@ -32,13 +35,45 @@ class Plugin extends PluginBase
 
     /**
      * register method, called when the plugin is first registered.
+     *
+     * Register the cognito auth driver directly here (not via service provider)
+     * to ensure it's registered AFTER RainLab.User replaces the auth singleton.
      */
     public function register()
     {
-        /**
-         * Register auth provider for AWS Cognito
-         */
-        App::register(CognitoAuthServiceProvider::class);
+        // Register CognitoClient singleton
+        $this->app->singleton(CognitoClient::class, function (Application $app) {
+            $config = [
+                'credentials' => config('cognito.credentials'),
+                'region'      => config('cognito.region'),
+                'version'     => config('cognito.version')
+            ];
+
+            return new CognitoClient(
+                new CognitoIdentityProviderClient($config),
+                config('cognito.app_client_id'),
+                config('cognito.app_client_secret'),
+                config('cognito.user_pool_id')
+            );
+        });
+
+        // Register cognito auth driver on the current auth manager
+        // This runs after RainLab.User has replaced the auth singleton
+        $this->app['auth']->extend('cognito', function (Application $app, $name, array $config) {
+            $guard = new CognitoGuard(
+                $name,
+                $app->make(CognitoClient::class),
+                $app['auth']->createUserProvider($config['provider']),
+                $app['session.store'],
+                $app['request']
+            );
+
+            $guard->setCookieJar($app['cookie']);
+            $guard->setDispatcher($app['events']);
+            $guard->setRequest($app->refresh('request', $guard, 'setRequest'));
+
+            return $guard;
+        });
     }
 
     /**
