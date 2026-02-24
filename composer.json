@@ -9,6 +9,6 @@
         "aws/aws-sdk-php": "^3.273",
         "illuminate/auth": "*",
         "laravel/ui": "^4.2",
-        "rainlab/user-plugin": "^2.1 || ^3.0"
+        "rainlab/user-plugin": "^2.1"
     }
 }

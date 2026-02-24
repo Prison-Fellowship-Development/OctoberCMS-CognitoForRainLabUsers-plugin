@@ -1,7 +1,6 @@
 <?php namespace Albrightlabs\RainlabUserCognito;
 
 use App;
-use Schema;
 use RainLab\User\Models\User;
 use System\Classes\PluginBase;
 use AlbrightLabs\RainlabUserCognito\Providers\CognitoAuthServiceProvider;
@@ -47,11 +46,7 @@ class Plugin extends PluginBase
     public function boot()
     {
         User::extend(function (User $model) {
-            $fillable = ['is_cognito_user'];
-            if (Schema::hasColumn($model->getTable(), 'is_activated')) {
-                $fillable[] = 'is_activated';
-            }
-            $model->addFillable($fillable);
+            $model->addFillable(['is_cognito_user', 'is_activated']);
         });
     }
 

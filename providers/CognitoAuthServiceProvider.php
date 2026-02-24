@@ -8,12 +8,7 @@ use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 
 class CognitoAuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the cognito auth driver.
-     * Must be in register() not boot() so the driver is available
-     * before any code tries to resolve the auth guard.
-     */
-    public function register()
+    public function boot()
     {
         $this->app->singleton(CognitoClient::class, function (Application $app) {
             $config = [

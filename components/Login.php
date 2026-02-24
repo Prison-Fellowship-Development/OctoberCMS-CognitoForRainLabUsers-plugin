@@ -4,10 +4,10 @@ use Auth;
 use Flash;
 use Config;
 use Redirect;
-use Schema;
 use Validator;
 use ValidationException;
 use RainLab\User\Models\User;
+use RainLab\User\Classes\AuthManager;
 use Illuminate\Http\Request;
 use Cms\Classes\ComponentBase;
 use BlackBits\LaravelCognitoAuth\CognitoClient;
@@ -88,9 +88,7 @@ class Login extends ComponentBase
                     $rainlabUser->password = $randomString;
                     $rainlabUser->password_confirmation = $randomString;
                     $rainlabUser->is_cognito_user = 1;
-                    if (Schema::hasColumn($rainlabUser->getTable(), 'is_activated')) {
-                        $rainlabUser->is_activated = true;
-                    }
+                    $rainlabUser->is_activated = true;
                     $rainlabUser->save();
                 }
                 Auth::login($rainlabUser);
@@ -118,7 +116,7 @@ class Login extends ComponentBase
      */
     public function onLogout()
     {
-        Auth::logout();
+        AuthManager::instance()->logout();
 
         return Redirect::to(Config::get('cognito.login_url'));
     }
@@ -128,7 +126,7 @@ class Login extends ComponentBase
      */
     public function authUser()
     {
-        return Auth::user();
+        return Auth::getUser();
     }
 
     /**
